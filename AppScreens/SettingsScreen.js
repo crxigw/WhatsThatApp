@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FlatList, ActivityIndicator, Text, View, Button, Alert, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { FlatList, ActivityIndicator, Text, View, Alert, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class SettingscreenApp extends Component {
@@ -9,30 +9,97 @@ export default class SettingscreenApp extends Component {
 
     this.state = {
       isLoading: true,
-      userData: []
+      userData: [],
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: ''
     }
   }
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View>
-          <TouchableOpacity style={styles.btn}
+    return (
+      <View style={styles.container}>
+        <TextInput
+          style={styles.textInput}
+          placeholder='first_name'
+          onChangeText={this.setState.first_name}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder='last_name'
+          onChangeText={this.setState.last_name}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder='email'
+          onChangeText={this.setState.email}
+        />
+
+        <TextInput
+          style={styles.textInput}
+          placeholder='password'
+          onChangeText={this.setState.password}
+        />
+
+        <TouchableOpacity style={styles.btn}
+          onPress={() => this.updateUser()}>
+          <Text style={styles.btnText}
+            onPress={() => this.updateUser()}>Update Info</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.btn}
           onPress={() => this.logOut()}>
-            <Text style={styles.btnText}
+          <Text style={styles.btnText}
             onPress={() => this.logOut()}>Log Out</Text>
-          </TouchableOpacity>
-        </View>
-      )
-    }
+        </TouchableOpacity>
+      </View>
+    )
   }
 
-  getUserData() {
-    return fetch('http://localhost:3333/api/1.0.0/'+whatsthat_user_id)
-    .then((response) => {
-      if (response.status === 201) {
-        
-      }
+
+
+  async getUserData() {
+    let id = await AsyncStorage.getItem('whatsthat_user_id')
+    return fetch('http://localhost:3333/api/1.0.0/' + id, {
+      headers: { 'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token') }
     })
+      .then(async (response) => {
+        if (response.status === 200) {
+          console.log('This works, load data')
+            .then((responseJSON) => {
+              this.setState({
+                isLoading: false,
+                userData: responseJSON
+              })
+            })
+        } else if (response.status === 401) {
+          await AsyncStorage.removeItem('whatsthat_session_token')
+          await AsyncStorage.removeItem('whatsthat_user_id')
+          this.props.navigation.navigate('Login')
+        } else {
+          throw 'Something has gone wrong'
+        }
+      })
+  }
+
+  async logOut() {
+    return fetch('http://localhost:3333/api/1.0.0/logout', {
+      method: 'post',
+      headers: { 'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token') }
+    })
+      .then(async (response) => {
+        if (response.status === 200) {
+          await AsyncStorage.removeItem('whatsthat_session_token')
+          await AsyncStorage.removeItem('whatsthat_user_id')
+          this.props.navigation.navigate('Login')
+        } else if (response.status === 401) {
+          await AsyncStorage.removeItem('whatsthat_session_token')
+          await AsyncStorage.removeItem('whatsthat_user_id')
+          this.props.navigation.navigate('Login')
+        } else {
+          throw 'Something has gone wrong'
+        }
+      })
   }
 }
 
@@ -44,7 +111,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  btn : {
+  btn: {
     borderRadius: 25,
     height: 50,
     borderWidth: 1,
@@ -57,5 +124,15 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: 'white'
+  },
+  textInput: {
+    borderRadius: 25,
+    height: 50,
+    padding: 10,
+    borderWidth: 1,
+    marginBottom: 15,
+    borderRadius: 30,
+    alignItems: 'center',
+    backgroundColor: 'white'
   }
 });

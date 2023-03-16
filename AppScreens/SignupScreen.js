@@ -155,7 +155,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     height: 50,
     borderWidth: 1,
-    //width: '20%',
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,
@@ -181,7 +180,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonText: {
-    color: 'white'
+    color: 'white',
+    textDecorationLine: 'underline'
   },
   error: {
     color: "red",

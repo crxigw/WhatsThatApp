@@ -152,12 +152,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white'
   },
-  signup: {
-    justifyContent: "center",
-    textDecorationLine: "underline"
-  },
   buttonText: {
-    color: 'white'
+    color: 'white',
+    textDecorationLine: 'underline'
   },
   error: {
     color: "red",
