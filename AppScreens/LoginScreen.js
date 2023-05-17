@@ -40,6 +40,7 @@ export default class LoginScreenApp extends Component {
       email: this.state.email,
       password: this.state.password
     }
+    console.log(signinData)
     return fetch('http://localhost:3333/api/1.0.0/login',
       {
         method: 'POST',
@@ -50,7 +51,7 @@ export default class LoginScreenApp extends Component {
         if (response.status===200) {
           return response.json();
         } else if (response.status === 400) {
-          throw "Invalid email of password"
+          throw "Invalid email or password"
         } else {
           throw "Something went wrong"
         }
@@ -114,7 +115,7 @@ export default class LoginScreenApp extends Component {
         <TouchableOpacity style={styles.loginbtn}>
           <Text
             style={styles.buttonText}
-            onPress={() => this.props.navigation.navigate('Create Account')}>Create Account</Text>
+            onPress={() => this.props.navigation.navigate('Create Account')}>Create an Account</Text>
         </TouchableOpacity>
 
 
@@ -149,6 +150,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 15,
     borderRadius: 30,
+    width: '20%',
     alignItems: 'center',
     backgroundColor: 'white'
   },

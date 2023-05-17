@@ -69,13 +69,13 @@ export default class SignUpScreenApp extends Component {
         <TouchableOpacity style={styles.signupbtn}
           onPress={() => this.SignUpButtonPress()}>
           <Text style={styles.buttonText}
-            onPress={() => this.SignUpButtonPress()}>  Create Account  </Text>
+            onPress={() => this.SignUpButtonPress()}>Create Account</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.signupbtn}
-          onPress={() => this.props.navigation.navigate('Login')}>
+          onPress={() => this.props.navigation.goBack()}>
           <Text style={styles.buttonText}
-            onPress={() => this.props.navigation.navigate('Login')}>  Already have an account?  </Text>
+            onPress={() => this.props.navigation.goBack()}>Have an account?</Text>
         </TouchableOpacity>
       </View>
     );
@@ -102,7 +102,7 @@ export default class SignUpScreenApp extends Component {
     }
 
     console.log("Button clicked")
-    console.log("API I'm gunning for you")
+    console.log("Read to send to API")
     this.SignUpNetworking()
   }
 
@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     height: 50,
     borderWidth: 1,
+    width: '20%',
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,
@@ -170,14 +171,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center',
     backgroundColor: 'white'
-  },
-  login: {
-    justifyContent: "center",
-    textDecorationLine: "underline"
-  },
-  button: {
-    alignContent: 'center',
-    justifyContent: "center",
   },
   buttonText: {
     color: 'white',

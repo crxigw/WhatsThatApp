@@ -7,6 +7,9 @@ import ChatScreen from './AppScreens/ChatScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ContactsScreen from './AppScreens/ContactsScreen';
 import SettingsScreen from './AppScreens/SettingsScreen';
+import BlockedScreen from './AppScreens/BlockedContacts';
+import IndividualChat from './AppScreens/IndividualChat';
+import {NavigationEvents} from 'react-navigation';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -26,10 +29,31 @@ export default function App() {
 
 function InAppTabNavi() {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name='Contacts' component={ContactsScreen}/>
-      <Tab.Screen name='Chat' component={ChatScreen}/>
+    <Tab.Navigator
+    screenOptions={{headerShown: false}}>
+      <Tab.Screen name='Contacts' component={ContactStack}/>
+      <Tab.Screen name='Chats' component={ChatStack}/>
       <Tab.Screen name='Settings' component={SettingsScreen}/>
     </Tab.Navigator>
+  )
+}
+
+function ContactStack() {
+  return (
+    <AuthStack.Navigator
+    screenOptions={{headerShown: false}}>
+      <AuthStack.Screen name='Contacts2' component={ContactsScreen}/>
+      <AuthStack.Screen name='Blocklist' component={BlockedScreen}/>
+    </AuthStack.Navigator>
+  )
+}
+
+function ChatStack() {
+  return(
+    <AuthStack.Navigator
+    screenOptions={{headerShown: false}}>
+      <AuthStack.Screen name='Chatlist' component={ChatScreen}/>
+      <AuthStack.Screen name='IndividalChat' component={IndividualChat}/>      
+    </AuthStack.Navigator>
   )
 }
