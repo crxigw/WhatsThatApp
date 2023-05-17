@@ -31,7 +31,7 @@ export default class ChatScreenApp extends Component {
         <FlatList
           data={this.state.userChats}
           renderItem={({ item }) => <><Text style={styles.btnText}>{item.name}</Text>
-            <TouchableOpacity style={styles.btn2} onPress={() => this.props.navigation.navigate('IndividalChat', {chatID: item.chat_id})}><Text style={styles.btnText}>View Chat</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.btn2} onPress={() => this.props.navigation.navigate('IndividalChat', {chatID: item.chat_id, chatName: item.name})}><Text style={styles.btnText}>View Chat</Text></TouchableOpacity>
           </>} />
       </View>
     );

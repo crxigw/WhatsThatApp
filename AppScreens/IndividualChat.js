@@ -9,29 +9,28 @@ export default class IndividualChat extends Component {
 
     this.state = {
       newMessage: '',
-      chatDetails: []
+      chatDetails: {}
     }
   }
 
   render() {
-    const { chatID } = this.props.route.params;
+    const { chatID, chatName } = this.props.route.params;
     return (
       <View style={styles.container}>
         <View style={styles.heading}>
           <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.goBack()}>
             <Text style={styles.btnText}>Back</Text>
           </TouchableOpacity>
-          <Text style={styles.headingText}>Indivual Chat Screen</Text>
+          <Text style={styles.headingText}>{chatName}</Text>
           <TouchableOpacity style={styles.btn}>
             <Text style={styles.btnText}>Manage</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.messages}>
-          <Text>Chat ID: {chatID}</Text>
           <FlatList
-          data={this.state.chatDetails}
-          renderItem={({item}) => <><Text>{item.messages}</Text></>} />
+          data={this.state.chatDetails.messages}
+          renderItem={({item}) => <><Text>{item.message}</Text></>} />
         </View>
 
 
@@ -56,17 +55,19 @@ export default class IndividualChat extends Component {
   }
 
   async messageNetworking() {
+    const { chatID } = this.props.route.params;
     return fetch('http://localhost:3333/api/1.0.0/chat/' + chatID + '/message', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token')
       },
-      body: JSON.stringify({ name: this.state.newMessage })
+      body: JSON.stringify({ message: this.state.newMessage })
     })
       .then(async (response) => {
         if (response.status === 200) {
           this.loadDetails();
+          this.forceUpdate();
         } else if (response.status === 401) {
           await AsyncStorage.removeItem('whatsthat_session_token')
           await AsyncStorage.removeItem('whatsthat_user_id')
@@ -82,6 +83,7 @@ export default class IndividualChat extends Component {
   }
 
   async loadDetails() {
+    const { chatID } = this.props.route.params;
     return fetch('http://localhost:3333/api/1.0.0/chat/' + chatID, {
       headers: { 'X-Authorization': await AsyncStorage.getItem('whatsthat_session_token') }
     })
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
   },
   messages: {
     flex: 9,
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   input: {
     flex: 1,
